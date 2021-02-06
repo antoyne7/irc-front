@@ -5,7 +5,7 @@ import authService from "../services/auth.service"
 export let socket;
 
 export const initiateSocket = (channel) => {
-    socket = io(param.SOCKETIOHOST, {transports: ['websocket'], upgrade: false});
+    socket = io(param.HOST, {transports: ['websocket'], upgrade: false});
     console.log(`Connecting socket...`);
     if (socket && channel) {
         socket.emit('join', channel.name, authService.getCurrentUser().token)

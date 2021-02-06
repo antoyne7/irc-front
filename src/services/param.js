@@ -13,10 +13,10 @@ const SOCKETIOHOST = 'https://api-dot-epitech-irc-api.ew.r.appspot.com/'
 
 const param = {
     SOCKETIOHOST,
-    PROTOCOL,
-    HOSTNAME,
-    PEERPORT,
-    PORT,
+    // PROTOCOL,
+    // HOSTNAME,
+    // PEERPORT,
+    // PORT,
     HOST,
     peer_endpoint: "/peerjs",
     img: HOST + "/users-pictures/",

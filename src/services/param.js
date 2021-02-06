@@ -1,4 +1,4 @@
-const HOST = "";
+const HOST = "https://irc-back.herokuapp.com/";
 // const HOSTNAME = "localhost";
 // const PROTOCOL = "http://"
 // const PORT = ":8080"
@@ -9,14 +9,8 @@ const PORT = ":8443"
 const PEERPORT = "9000"*/
 // const HOST = PROTOCOL + HOSTNAME + PORT
 const APIHOST = HOST + "/api";
-const SOCKETIOHOST = 'https://api-dot-epitech-irc-api.ew.r.appspot.com/'
 
 const param = {
-    SOCKETIOHOST,
-    // PROTOCOL,
-    // HOSTNAME,
-    // PEERPORT,
-    // PORT,
     HOST,
     peer_endpoint: "/peerjs",
     img: HOST + "/users-pictures/",

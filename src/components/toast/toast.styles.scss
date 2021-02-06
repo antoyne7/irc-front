@@ -1,0 +1,53 @@
+.toast {
+
+  position: absolute;
+  background: #e88e30;
+  border-radius: 5px;
+  padding: 15px 15px;
+  color: white;
+  top: 10px;
+  animation: fade-in .3s;
+  transition: all ease-in-out .3s;
+
+  &.closing {
+    animation: fade-out .3s;
+  }
+
+  @media (max-width: 768px) {
+    transform: translateX(-50%);
+    left: 50%;
+    width: 100%;
+  }
+
+  .close-button {
+    cursor: pointer;
+
+    &:focus {
+      border: none;
+      outline: none;
+    }
+  }
+
+  .toast-text {
+    padding: 0 10px;
+    @media (max-width: 768px) {
+      padding: 0 15px;
+    }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    top: -100px;
+  }
+  to {
+    top: 10px;
+  }
+}@keyframes fade-out {
+  from {
+    top: 10px;
+  }
+  to {
+    top: -150px;
+  }
+}

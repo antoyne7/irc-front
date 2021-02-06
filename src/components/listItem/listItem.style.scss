@@ -1,0 +1,52 @@
+div.ListItem {
+  &:last-of-type {
+    &.toggled{
+      max-height: 250px;
+    }
+  }
+}
+
+.ListItem {
+  transition: max-height .4s ease-in-out;
+  height: var(--height); // variable définis dans le composant
+  max-height: 61px;
+  margin: 15px 15px 23px;
+  background-color: var(--background-bis);
+  overflow: hidden;
+  border-radius: 6px;
+
+  &.toggled {
+    height: auto;
+    max-height: 350px;
+
+    .main .icon-arrow-container img {
+      transform: rotate(0) scaleY(1.2);
+    }
+  }
+
+  .main {
+    display: flex;
+    padding: 20px 6px;
+    align-items: center;
+    cursor: pointer;
+    color: var(--contrast-projet);
+    font-family: Inter, sans-serif;
+    font-weight: bold;
+
+    .icon-type-container {
+      padding: 0 14px;
+    }
+
+    .icon-arrow-container {
+      margin-left: auto;
+      padding: 0 6px 0 14px;
+      display: flex;
+      align-items: center;
+
+      img {
+        transition: transform .4s ease-in-out;
+        transform: rotate(-90deg) scaleY(1.2);
+      }
+    }
+  }
+}

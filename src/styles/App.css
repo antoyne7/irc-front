@@ -1,0 +1,57 @@
+:root {
+    --noir: #1F1C21;
+    --noir-bis: #29262B;
+    --violet: #8360C7;
+    --violet-clair: #A281D5;
+    --violet-fonce: #7350B9;
+    --blanc-projet: #F7F7F9;
+    --blanc-fond-clair: #F2F2F2;
+    --blanc: #FFFFFF;
+    --gris: #7D7D7D;
+    --rouge: #ae1f1f;
+    --vert: #4caf50;
+    --rouge-call: #CE5252;
+
+    --background-call: #343135;
+    --command-color: #ffa344;
+    --background: var(--noir);
+    --background-bis: var(--noir-bis);
+    --primary: var(--violet);
+    --primary-clair: var(--violet-clair);
+    --primary-fonce: var(--violet-fonce);
+    --contrast-projet: var(--blanc-projet);
+    --contrast-fond-clair: var(--blanc-fond-clair);
+    --background-ecriture: #2A292B;
+
+    --sidebar-size: 375px;
+    --menu-size: 70px;
+    --box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
+    --box-shadow-modal: 0 0 4px 4px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 1440px) {
+    :root {
+        --sidebar-size: 360px;
+    }
+}
+
+.App {
+    background-color: var(--background);
+    min-width: 100vw;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+
+}
+
+
+.App.white-theme {
+    --background: var(--blanc-projet);
+    --background-bis: var(--blanc);
+    --contrast-projet: var(--noir);
+    --contrast-fond-clair: var(--noir-bis);
+    --command-color: #ff5e00;
+}
+
+* {
+    box-sizing: border-box;
+}

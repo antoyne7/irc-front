@@ -1,0 +1,41 @@
+.Button {
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  height: 50px;
+  font-family: Lato, sans-serif;
+  color: var(--contrast-projet);
+  background-color: var(--violet-fonce);
+  font-size: 22px;
+  cursor: pointer;
+
+  &.primary {
+    color: var(--blanc-projet);
+  }
+
+  &.secondary {
+    width: 40%;
+    font-family: Inter, sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    height: 40px;
+    margin: 0 auto;
+  }
+
+  &.danger {
+    border: 3px solid var(--rouge);
+    background: none;
+    color: var(--rouge);
+  }
+
+  &.border-only {
+    color: var(--contrast-projet);
+    background-color: transparent;
+    border: 2px solid var(--violet-fonce);
+
+    &.danger {
+      color: var(--rouge);
+      border: 3px solid var(--rouge);
+    }
+  }
+}

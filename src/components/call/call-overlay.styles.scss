@@ -1,0 +1,29 @@
+.call-overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  backdrop-filter: blur(30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  .call-overlay-container {
+    max-height: calc(90% - 95px);
+    height: 100%;
+    margin: 30px auto 0 !important;
+
+    .call-participant-container {
+      height: 100%;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  .call-overlay-tools {
+    display: flex;
+    justify-content: center;
+    height: 75px;
+  }
+}

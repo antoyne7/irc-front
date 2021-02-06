@@ -1,0 +1,18 @@
+.pfp {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  background: #C4C4C4;
+}
+
+.pfp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+
+  img {
+    max-height: 100%;
+  }
+}

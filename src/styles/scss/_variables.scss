@@ -1,0 +1,45 @@
+// Breakpoints
+//
+$breakpoints: (
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px,
+);
+
+@function breakpoint-get($key) {
+  @return #{map-get($breakpoints, $key)};
+}
+
+// Colors
+//
+
+// Components
+//
+$border-radius: 6px;
+
+// Spaces
+//
+$spaces: (
+        xs:  6,
+        sm:  12,
+        md:  24,
+        lg:  30,
+        xl:  40,
+        xxl: 60,
+        xxxl: 90,
+);
+
+@function space-get($key) {
+  @return #{map-get($spaces, $key)}px;
+}
+
+// Typography
+//
+$font-size-base: 18px;
+$font-size-lg: calc(#{$font-size-base} + 6px);
+$font-size-sm: calc(#{$font-size-base} - 2px);
+$font-size-xl: calc(#{$font-size-base} + 8px);
+$font-size-xxl: calc(#{$font-size-base} + 16px);
+$font-size-xxxl: calc(#{$font-size-base} + 44px);
+$font-size-xs: calc(#{$font-size-base} - 4px);

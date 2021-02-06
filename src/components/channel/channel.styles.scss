@@ -1,0 +1,329 @@
+.white-theme {
+  textarea {
+    box-shadow: 0 2px 4px 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .read-only {
+    opacity: 0.55 !important;
+  }
+}
+
+.channel-content-container {
+  height: 100%;
+  position: relative;
+
+  .hidden {
+    display: none;
+  }
+
+  .title-container {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    padding: 5px 0;
+    justify-content: space-between;
+    @media (min-width: 992px) {
+      padding: 15px 0;
+
+    }
+
+    .svg-container {
+      svg {
+        margin-left: 10px;
+        cursor: pointer;
+
+        path {
+          &:first-of-type {
+            &.call-red.in-call {
+              animation: opacity 1.2s infinite alternate;
+              fill: var(--rouge-call);
+
+            }
+          }
+
+          &:nth-child(2) {
+            &.call-red.in-call {
+              animation: opacity 1s infinite alternate;
+              fill: var(--rouge-call);
+            }
+          }
+        }
+
+        path {
+          fill: var(--primary);
+        }
+      }
+    }
+  }
+
+  .Navigation {
+    padding: 0 0 10px;
+  }
+
+  .content {
+    height: 100%;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+}
+
+.channel-message-container {
+  width: 100%;
+  height: calc(100vh - 185px);
+  height: calc((var(--vh, 1vh) * 100) - 185px);
+  @media (max-width: 992px) {
+    height: calc(100vh - 235px);
+    height: calc((var(--vh, 1vh) * 100) - 235px);
+  }
+  overflow-y: scroll;
+  //TODO: changer la couleur (peut être)
+  background: var(--background);
+  //background: var(--background-ecriture);
+
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 5px;
+  }
+
+  .messages-container {
+    padding: 20px 0 10px;
+
+    font-size: 1.6rem;
+    @media(max-width: 1440px) {
+      padding: 10px 0;
+    }
+    @media (max-width: 992px) {
+      padding: 0;
+    }
+
+    .same-message {
+      padding-top: 7px;
+      padding-left: 50px;
+      color: var(--contrast-projet);
+    }
+
+    > div:first-of-type {
+      padding-top: 15px;
+    }
+
+    .message {
+      display: flex;
+      flex-wrap: wrap;
+      padding-top: 20px;
+
+
+      .container-info {
+        display: flex;
+        flex-direction: column;
+        padding-left: 10px;
+        max-width: calc(100% - 80px);
+
+
+        .userinfo {
+          display: flex;
+          align-items: center;
+
+          span {
+            &:first-of-type {
+              font-family: Inter, sans-serif;
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: var(--primary);
+            }
+
+            &.date {
+              color: var(--gris);
+              font-size: 1.3rem;
+              padding-left: 10px;
+              font-weight: 400;
+
+              &:first-letter {
+                text-transform: uppercase;
+              }
+            }
+          }
+        }
+
+        .text {
+          color: var(--contrast-projet);
+          font-family: Lato, sans-serif;
+          font-weight: 400;
+          padding-top: 5px;
+
+          ul {
+            margin-top: 5px;
+            padding-left: 15px;
+          }
+        }
+
+      }
+    }
+
+    .context-message {
+      font-family: Lato, sans-serif;
+      text-align: center;
+      margin: 15px 0 0;
+      font-size: 1.4rem;
+      color: var(--gris);
+      font-weight: 400;
+    }
+  }
+
+}
+
+
+.input-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  //TODO: changer la couleur
+  background: var(--background);
+  @media (max-width: 992px) {
+    height: 60px;
+    bottom: unset;
+  }
+
+  .command-list {
+    background-color: var(--background-bis);
+    position: absolute;
+    width: 90%;
+    height: auto;
+    bottom: calc(100% - 15px);
+    border-radius: 5px;
+    box-shadow: rgba(4, 4, 5, 0.15) 0px 0px 0px 1px, rgba(0, 0, 0, 0.24) 0px 8px 16px 0px;
+    color: var(--contrast-projet);
+    padding: 10px;
+
+    h2 {
+      font-size: 2.2rem;
+      margin-top: 5px;
+    }
+
+    .command-content {
+      font-size: 1.6rem;
+      padding: 5px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+
+      span {
+        font-size: 1.4rem;
+        padding-top: 2px;
+        color: gray;
+
+        &:first-of-type {
+          font-size: 1.6rem;
+          padding-left: 2px;
+          font-style: italic;
+          opacity: 0.8;
+        }
+
+        &:last-of-type {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .container {
+    margin: 0;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--background-bis);
+    height: 30px;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    color: var(--contrast-projet);
+    font-family: 'Lato', sans-serif;
+    resize: none;
+    font-size: 1.6rem;
+
+    &.orange {
+      color: var(--command-color)
+    }
+  }
+
+
+  .read-only {
+    position: absolute;
+    left: 0;
+    opacity: 0.3;
+    background: none;
+    pointer-events: none;
+    color: var(--command-color);
+  }
+
+  .input-msg {
+    display: flex;
+    position: relative;
+    //background: var(--background-bis);
+    border-radius: 4px;
+    align-items: center;
+
+    .wrapper {
+      position: relative;
+      width: 100%;
+      height: 30px;
+    }
+
+    .icons-container {
+      //position: absolute;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+
+      //aside.emoji-picker-react {
+      //  background: var(--background-bis);
+      //  box-shadow: 0 2px 4px 4px rgba(0, 0, 0, 0.03);
+      //  border: none;
+      //  overflow: hidden;
+      //  position: absolute;
+      //  bottom: 35px;
+      //  right: 5px;
+      //  button{
+      //    color: white;
+      //  }
+      //}
+
+      > svg {
+        height: 22px;
+        width: 22px;
+        cursor: pointer;
+
+        path {
+          fill: var(--primary);
+        }
+
+        &:first-of-type {
+          margin-right: 2px;
+          margin-left: 4px;
+        }
+
+        margin: 0 4px;
+      }
+    }
+  }
+
+
+}

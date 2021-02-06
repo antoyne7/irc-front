@@ -1,0 +1,44 @@
+.msg-alert {
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  color: var(--rouge);
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.close-button {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  right: 10px;
+  font-size: 20px;
+}
+
+.alert-body {
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.alert-btn-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  button {
+    background: none;
+    border: var(--primary-clair) solid 2px;
+    padding: 5px 20px;
+    color: var(--contrast-projet);
+    border-radius: 5px;
+    font-weight: 500;
+    font-family: 'Lato',sans-serif;
+    cursor: pointer;
+    margin: 5px 15px ;
+    &:last-of-type{
+      background-color: var(--rouge);
+      border-color: var(--rouge);
+      color: var(--blanc-projet);
+    }
+  }
+}

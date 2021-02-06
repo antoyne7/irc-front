@@ -1,0 +1,36 @@
+.call-tool-btn {
+  background: var(--background-call);
+  width: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  margin: 0 40px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px 4px rgba(0, 0, 0, 0.04);
+  @media (max-width: 768px) {
+    margin: 0 10px;
+  }
+  @media (max-width: 400px) {
+    width: 60px;
+    height: 60px;
+  }
+  &.mute.muted {
+    background: white;
+    svg {
+      path{
+        fill: var(--background-call);
+      }
+    }
+  }
+  &.hangup {
+    background: var(--rouge-call);
+
+    svg {
+      path {
+        transform: translateY(3px);
+      }
+    }
+  }
+}

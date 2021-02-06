@@ -1,0 +1,23 @@
+.Navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding: 5px 0 0;
+
+
+  a.back {
+    text-decoration: none;
+    font-family: Inter, sans-serif;
+    font-weight: bold;
+    color: var(--primary-clair);
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: 6px;
+      transform: rotate(90deg);
+    }
+  }
+
+
+}

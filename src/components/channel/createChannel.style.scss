@@ -1,0 +1,17 @@
+.CreateChannel {
+  padding: 0 10px;
+
+  input {
+    background-color: var(--background);
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  > button.secondary {
+    margin: 0 auto 15px;
+  }
+}

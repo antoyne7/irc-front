@@ -1,0 +1,44 @@
+.SearchChannel {
+  padding: 0 10px;
+
+  input {
+    background-color: var(--background);
+    margin-bottom: 15px;
+  }
+
+  .loading-wrapper {
+    .loading-container {
+      height: auto;
+    }
+
+    margin: 5px auto 15px;
+  }
+
+  .channels {
+    .no-results {
+      color: var(--contrast-projet);
+      padding-bottom: 15px;
+      text-align: center;
+    }
+
+    padding: 0 20px;
+
+    .channel-item {
+      color: var(--contrast-projet);
+      margin-bottom: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .channel-users {
+        color: var(--primary);
+        font-size: 14px;
+
+        svg {
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-const HOST = "https://irc-back.herokuapp.com/";
+const HOST = "https://irc-back.herokuapp.com";
 // const HOSTNAME = "localhost";
 // const PROTOCOL = "http://"
 // const PORT = ":8080"

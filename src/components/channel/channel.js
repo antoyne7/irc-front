@@ -368,7 +368,6 @@ const Channel = ({channelData, showNav = true}) => {
 
         //Todo: Corriger
         if (isTop(wrappedElement, chanCont) && !messagesLoading) {
-            alert('cc')
             chanCont.removeEventListener('scroll', trackScrolling);
             getOlderMessages()
             chanCont.scrollBy(0, 10)

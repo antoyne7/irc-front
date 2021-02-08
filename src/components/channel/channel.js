@@ -375,6 +375,7 @@ const Channel = ({channelData, showNav = true}) => {
     }
 
     const isTop = (el) => {
+        alert('cc')
         let nav = document.querySelector(".Navigation")?.getBoundingClientRect()?.height;
         let title = document.querySelector('.title-container.container')?.getBoundingClientRect()?.height
         return ((nav ?? 0) + title) === el?.getBoundingClientRect().top;

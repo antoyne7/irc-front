@@ -39,6 +39,8 @@ dayjs.extend(relativeTime);
 
 const Channel = ({channelData, showNav = true}) => {
 
+    console.log('root comp')
+
     let globalLastMessage;
 
     const history = useHistory();
@@ -90,6 +92,7 @@ const Channel = ({channelData, showNav = true}) => {
     const [commandList, setCommandList] = useState([]);
 
     useEffect(() => {
+        console.log('useEffect1')
         if (!userState.isLoading && !userState.isError) {
 
             document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
@@ -126,6 +129,7 @@ const Channel = ({channelData, showNav = true}) => {
     }, [userState, channelData]);
 
     useEffect(() => {
+        console.log('useEffect2')
         if (!isFetchingData) {
             scrollToBottom();
 
@@ -177,6 +181,7 @@ const Channel = ({channelData, showNav = true}) => {
     }, [isFetchingData, channelData]);
 
     useEffect(() => {
+        console.log('useEffect3')
             if (!isFetchingData) {
                 socket.on("incomingCall", () => {
                     setAlertTitle("Appel entrant...")

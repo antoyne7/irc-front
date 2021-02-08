@@ -646,11 +646,11 @@ const Channel = ({channelData, showNav = true}) => {
         if (lastMessage && lastMsgDate && lastMessage.username === msg.user.username &&
             !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3 && !isLastOldMsg) {
             setMessageFeed((oldValue) => {
-                return [...oldValue, sameUsernameMessageTemplate(msg.message)]
+                return tobegining ? [sameUsernameMessageTemplate(msg.message), ...oldValue] : [...oldValue, sameUsernameMessageTemplate(msg.message)]
             });
         } else {
             setMessageFeed((oldValue) => {
-                return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
+                return tobegining ? [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue] : [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
             });
         }
     };

@@ -3,7 +3,7 @@
   justify-content: space-between;
   margin-top: 4px;
   padding: 5px 0 0;
-
+  height: 30px;
 
   a.back {
     text-decoration: none;
@@ -19,5 +19,8 @@
     }
   }
 
+  .settings {
+    max-height: 24px;
+  }
 
 }

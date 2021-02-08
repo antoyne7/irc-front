@@ -1,17 +1,7 @@
-// const HOSTNAME = "localhost";
-// const PROTOCOL = "http://"
-// const PORT = ":8080"
-
-const PROTOCOL = "https://"
-const HOSTNAME = "192.168.1.146";
-const PORT = ":8443"
-const HOST = PROTOCOL + HOSTNAME + PORT
+const HOST = "https://irc-back.herokuapp.com"
 const APIHOST = HOST + "/api";
 
 const param = {
-    PROTOCOL,
-    HOSTNAME,
-    PORT,
     HOST,
     img: HOST + "/users-pictures/",
     botPicture: HOST + "/bot-picture/",

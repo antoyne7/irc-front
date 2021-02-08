@@ -92,7 +92,6 @@ const Channel = ({channelData, showNav = true}) => {
     const [commandList, setCommandList] = useState([]);
 
     useEffect(() => {
-        console.log('useEffect1')
         if (!userState.isLoading && !userState.isError) {
 
             document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
@@ -129,7 +128,6 @@ const Channel = ({channelData, showNav = true}) => {
     }, [userState, channelData]);
 
     useEffect(() => {
-        console.log('useEffect2')
         if (!isFetchingData) {
             scrollToBottom();
 
@@ -181,7 +179,6 @@ const Channel = ({channelData, showNav = true}) => {
     }, [isFetchingData, channelData]);
 
     useEffect(() => {
-        console.log('useEffect3')
             if (!isFetchingData) {
                 socket.on("incomingCall", () => {
                     setAlertTitle("Appel entrant...")
@@ -693,7 +690,6 @@ const Channel = ({channelData, showNav = true}) => {
     }
 
     const sameUsernameMessageTemplate = (message) => {
-        console.log('sameUsernameMessageTemplate')
         return (
             <div className={"same-message"} key={Date.now()}>
                 <pre>
@@ -712,7 +708,6 @@ const Channel = ({channelData, showNav = true}) => {
     };
 
     const messageTemplate = (message, user, date, picture) => {
-        console.log('messageTemplate')
         return (
             <div key={Date.now()} className="message">
                 <Picture size="40px" src={picture ? picture : user.picture ? param.img + user.picture : null}
@@ -754,6 +749,7 @@ const Channel = ({channelData, showNav = true}) => {
                 {message}
                 <ul className="user-list">
                     {list.map((element) => {
+                        console.log("La je map !")
                         return (
                             <li key={element._id ?? Date.now()}>{element.username ?? element.name}</li>
                         )

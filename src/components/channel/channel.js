@@ -693,6 +693,7 @@ const Channel = ({channelData, showNav = true}) => {
     }
 
     const sameUsernameMessageTemplate = (message) => {
+        console.log('sameUsernameMessageTemplate')
         return (
             <div className={"same-message"} key={Date.now()}>
                 <pre>
@@ -711,6 +712,7 @@ const Channel = ({channelData, showNav = true}) => {
     };
 
     const messageTemplate = (message, user, date, picture) => {
+        console.log('messageTemplate')
         return (
             <div key={Date.now()} className="message">
                 <Picture size="40px" src={picture ? picture : user.picture ? param.img + user.picture : null}

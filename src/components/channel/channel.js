@@ -645,13 +645,26 @@ const Channel = ({channelData, showNav = true}) => {
         const msgDate = dayjs(msg.date);
         if (lastMessage && lastMsgDate && lastMessage.username === msg.user.username &&
             !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3 && !isLastOldMsg) {
-            setMessageFeed((oldValue) => {
-                return tobegining ? [sameUsernameMessageTemplate(msg.message), ...oldValue] : [...oldValue, sameUsernameMessageTemplate(msg.message)]
-            });
+            if (tobegining) {
+                setMessageFeed((oldValue) => {
+                    return [sameUsernameMessageTemplate(msg.message), ...oldValue]
+                });
+            } else {
+                setMessageFeed((oldValue) => {
+                    return [...oldValue, sameUsernameMessageTemplate(msg.message)]
+                });
+            }
+            
         } else {
-            setMessageFeed((oldValue) => {
-                return tobegining ? [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue] : [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
-            });
+            if (tobegining) {
+                setMessageFeed((oldValue) => {
+                    return [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue]
+                });
+            } else {
+                setMessageFeed((oldValue) => {
+                    return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
+                });
+            }            
         }
     };
 

@@ -547,6 +547,7 @@ const Channel = ({channelData, showNav = true}) => {
             }
         }
     };
+
     const onCloseToast = () => {
         setToastMsg("")
     }
@@ -647,22 +648,22 @@ const Channel = ({channelData, showNav = true}) => {
             !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3 && !isLastOldMsg) {
             if (tobegining) {
                 setMessageFeed((oldValue) => {
-                    return [sameUsernameMessageTemplate(msg.message), ...oldValue]
+                    return [sameUsernameMessageTemplate(msg.message, msg?._id), ...oldValue]
                 });
             } else {
                 setMessageFeed((oldValue) => {
-                    return [...oldValue, sameUsernameMessageTemplate(msg.message)]
+                    return [...oldValue, sameUsernameMessageTemplate(msg.message, msg?._id)]
                 });
             }
             
         } else {
             if (tobegining) {
                 setMessageFeed((oldValue) => {
-                    return [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue]
+                    return [messageTemplate(msg.message, msg.user, msg.date, picture ?? null, msg?._id), ...oldValue]
                 });
             } else {
                 setMessageFeed((oldValue) => {
-                    return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
+                    return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null, msg?._id)]
                 });
             }            
         }
@@ -702,9 +703,9 @@ const Channel = ({channelData, showNav = true}) => {
         })
     }
 
-    const sameUsernameMessageTemplate = (message) => {
+    const sameUsernameMessageTemplate = (message, id = Date.now()) => {
         return (
-            <div className={"same-message"} key={Date.now()}>
+            <div className={"same-message"} key={id}>
                 <pre>
                    {message}
                 </pre>
@@ -720,9 +721,9 @@ const Channel = ({channelData, showNav = true}) => {
         )
     };
 
-    const messageTemplate = (message, user, date, picture) => {
+    const messageTemplate = (message, user, date, picture, id = Date.now()) => {
         return (
-            <div key={Date.now()} className="message">
+            <div key={id} className="message">
                 <Picture size="40px" src={picture ? picture : user.picture ? param.img + user.picture : null}
                          name={user.picture ? null : picture ? null : user.username}/>
                 <div className="container-info">

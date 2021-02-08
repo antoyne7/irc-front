@@ -20,11 +20,12 @@ const Sidebar = ({channels}) => {
 
     const [channelList, setChannelList] = useState([])
     const [search, setSearch] = useState("")
-    const [channelsId, setChannelsId] = useState(channels.map(channel => channel._id))
+    const [channelsId, setChannelsId] = useState(channels?.map(channel => channel._id))
 
     useEffect(() => {
         const fetchChannels = async () => {
             const channelsTemp = []
+            if (!channelsId) return
             for (const channel of channelsId) {
                 await axios.get(param.channel.get + channel, {headers: AuthHeader()})
                     .then((resp) => {
@@ -50,8 +51,7 @@ const Sidebar = ({channels}) => {
         if (search.length < 2 ) setChannelsId(channels.map(channel => channel._id))
         filterChannels = filterChannels.filter(channel => {
             if (channel.isPrivate) {
-                let username = channel.users[0]._id.username
-                if (username === userState.user?.username) username = channel.users[1]._id.username
+                let username = channel.users[0]._id === null ? channel.users[1]._id.username : channel.users[0]._id.username
                 return username.toLowerCase().includes(search.toLowerCase())
             }
             return channel.name.toLowerCase().includes(search.toLowerCase())
@@ -60,7 +60,7 @@ const Sidebar = ({channels}) => {
     }
 
     const getUserInfo = (channelUsers) => {
-        const user = channelUsers[0]._id === userState.user._id ? channelUsers[0]._id : channelUsers[1]._id
+        const user = channelUsers[0]?._id._id === userState?.user?._id ? channelUsers[1]?._id : channelUsers[0]?._id
         return {
             username: user.username,
             picture: user.picture

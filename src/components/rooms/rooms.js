@@ -47,8 +47,7 @@ const Rooms = () => {
         if (!channels) return []
         channels = channels.filter(channel => {
             if (channel.isPrivate) {
-                let username = channel.users[0]._id.username
-                if (username === userState.user?.username) username = channel.users[1]._id.username
+                const username = channel.users[0]._id === null ? channel.users[1]._id.username : channel.users[0]._id.username
                 return username.toLowerCase().includes(search.toLowerCase())
             }
             return channel.name.toLowerCase().includes(search.toLowerCase())
@@ -60,7 +59,6 @@ const Rooms = () => {
         <Home menuSelected={1}>
             {isMobile &&
             <div className="rooms">
-
                 <h1>Vos discussions</h1>
                 <div className="channel-search">
                     <Input onChange={onSearch} placeholder="Rechercher un salon" type="text"/>

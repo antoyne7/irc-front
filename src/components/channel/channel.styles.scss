@@ -12,6 +12,18 @@
   height: 100%;
   position: relative;
 
+  .loading-container {
+    @media (min-width: 992px) {
+      height: 100vh;
+      height: calc(var(--vh, 1vh) * 100);
+    }
+  }
+
+  .toast {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   .hidden {
     display: none;
   }
@@ -56,6 +68,19 @@
     }
   }
 
+  .font-awsm-clicker {
+    display: inline-block;
+
+    .leave-chan {
+      font-size: 32px;
+      color: var(--rouge-call);
+
+      path {
+        fill: var(--rouge-call) !important;
+      }
+    }
+  }
+
   .Navigation {
     padding: 0 0 10px;
   }
@@ -73,7 +98,7 @@
 .channel-message-container {
   width: 100%;
   height: calc(100vh - 185px);
-  height: calc((var(--vh, 1vh) * 100) - 185px);
+  height: calc((var(--vh, 1vh) * 100) - 190px);
   @media (max-width: 992px) {
     height: calc(100vh - 235px);
     height: calc((var(--vh, 1vh) * 100) - 235px);
@@ -96,7 +121,13 @@
   }
 
   .messages-container {
-    padding: 20px 0 10px;
+    padding: 10px 0 10px;
+
+    .loading-container-msg {
+      .loading-container {
+        height: auto;
+      }
+    }
 
     font-size: 1.6rem;
     @media(max-width: 1440px) {

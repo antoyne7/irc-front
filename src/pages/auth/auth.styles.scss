@@ -47,6 +47,10 @@
     width: 100%;
     height: 100vh;
   }
+
+  .loading-container {
+    height: auto;
+  }
 }
 
 .auth-wrapper {
@@ -171,6 +175,7 @@
         margin-bottom: 20px;
       }
     }
+
     button {
       margin: 10px 0;
     }

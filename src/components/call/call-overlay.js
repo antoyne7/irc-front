@@ -76,9 +76,9 @@ const CallOverlay = ({peers, onClick, muted, hide}) => {
                 <CallToolBtn className={muted ?? null} onClick={(icon) => {
                     onClick(icon)
                 }} icon={"mute"}/>
-                <CallToolBtn onClick={(icon) => {
-                    onClick(icon)
-                }} icon={"camera"}/>
+                {/*<CallToolBtn onClick={(icon) => {*/}
+                {/*    onClick(icon)*/}
+                {/*}} icon={"camera"}/>*/}
                 <CallToolBtn onClick={(icon) => {
                     onClick(icon)
                 }} icon={"hangup"}/>

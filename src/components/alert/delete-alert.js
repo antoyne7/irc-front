@@ -4,7 +4,7 @@ import Modal from '../modal/modal'
 import "./delete-alert.styles.scss"
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 
-const DeleteAlert = ({title, message, onClose, onDelete}) => {
+const DeleteAlert = ({title, message, onClose, onDelete, btnMsg = "Supprimer"}) => {
     return (
         <Modal onClose={onClose}>
             <button className="close-button" onClick={onClose}>
@@ -17,7 +17,7 @@ const DeleteAlert = ({title, message, onClose, onDelete}) => {
                 </p>
                 <div className="alert-btn-container">
                     <button onClick={onClose}>Annuler</button>
-                    <button onClick={onDelete}>Supprimer</button>
+                    <button onClick={onDelete}>{btnMsg}</button>
                 </div>
             </div>
         </Modal>

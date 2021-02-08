@@ -27,10 +27,13 @@ import 'emoji-mart/css/emoji-mart.css'
 import {Picker} from 'emoji-mart'
 import CallAlert from "../call/call-alert";
 import CallOverlay from "../call/call-overlay";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import notificationJoin from "../../assets/discord-join-sound-effect-download.mp3"
 import notificationLeave from "../../assets/discord-leave-sound-effect-hd.mp3"
 
 import Peer from 'simple-peer'
+import Toast from "../toast/toast";
 
 dayjs.extend(relativeTime);
 
@@ -42,6 +45,9 @@ const Channel = ({channelData, showNav = true}) => {
 
     const userState = useUser();
 
+    const [msgHistory, setMsgHistory] = useState([""]);
+    const historyCount = useRef(0);
+
     const [enteringCall, setEnteringCall] = useState(false);
     const [isRoomInCall, setIsRoomInCall] = useState(false);
     const [isInCall, setIsInCall] = useState(false);
@@ -49,19 +55,28 @@ const Channel = ({channelData, showNav = true}) => {
     const [mute, setMute] = useState(false);
     const [peers, setPeers] = useState([]);
     const [showMessages, setShowMessages] = useState(false)
-    const [alertTitle, setAlertTitle] = useState("")
+    const [toastMsg, setToastMsg] = useState("");
 
     let streamRef = useRef();
+
     const peersRef = useRef([]);
     const usersInChan = useRef([]);
     const [notificationSound, setNotificationSound] = useState(null);
+    const [messagesLoading, setMessagesLoading] = useState(false);
+    const msgCount = useRef(0);
 
+    const additionalMsg = useRef(0);
     const [isError, setIsError] = useState(false);
-    const [alertMsg, setAlertMsg] = useState("");
+
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+    const [quitAlertMsg, setQuitAlertMsg] = useState("");
+    const [alertTitle, setAlertTitle] = useState("")
+    const [alertMsg, setAlertMsg] = useState("");
     const [formAlertMsg, setFormAlertMsg] = useState("");
     const [deleteAlertMsg, setDeleteAlertMsg] = useState("");
     const [channelDelete, setChannelDelete] = useState("");
+
     const [message, setMessage] = useState("");
     const [messageFeed, setMessageFeed] = useState([]);
     const [isFetchingData, setIsFecthingData] = useState(true);
@@ -76,6 +91,9 @@ const Channel = ({channelData, showNav = true}) => {
 
     useEffect(() => {
         if (!userState.isLoading && !userState.isError) {
+
+            document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
+
             //Get channels message
             axios.get(param.channel.getMessages + "?channel=" + channelData._id, {headers: authHeader()})
                 .then((resp) => {
@@ -84,6 +102,7 @@ const Channel = ({channelData, showNav = true}) => {
                         isJoinMessage: false,
                         date: null,
                     };
+                    msgCount.current = msgCount.current + 1
                     resp.data.forEach((msg) => {
                         displayMessage(globalLastMessage, msg);
                         globalLastMessage = {username: msg.user.username, isJoinMessage: false, date: msg.date};
@@ -117,6 +136,7 @@ const Channel = ({channelData, showNav = true}) => {
             });
 
             socket.on("chatMessage", (sentence, user, date) => {
+                additionalMsg.current = additionalMsg.current + 1;
                 displayMessage(globalLastMessage, {message: sentence, user: user, date});
                 globalLastMessage = {username: user.username, isJoinMessage: false, date: date};
                 scrollToBottom()
@@ -163,6 +183,7 @@ const Channel = ({channelData, showNav = true}) => {
                 socket.on("closeTiming", (users) => {
                     usersInChan.current = users;
                     setTimeout(() => {
+
                         if (!isInCall) {
                             setIsCaller(false)
                             setEnteringCall(false)
@@ -258,7 +279,7 @@ const Channel = ({channelData, showNav = true}) => {
                         setIsInCall(false);
                     }
                 })
-                socket.on('channelInCall', ()=>{
+                socket.on('channelInCall', () => {
                     setIsRoomInCall(true)
                 })
 
@@ -278,7 +299,7 @@ const Channel = ({channelData, showNav = true}) => {
                 setPeers([])
                 peersRef.current = []
                 if (streamRef.current) {
-                    console.log(streamRef.current.getTracks)
+
                     streamRef.current.getTracks().forEach(function (track) {
                         track.stop();
                     });
@@ -287,7 +308,6 @@ const Channel = ({channelData, showNav = true}) => {
         },
         [isFetchingData, channelData]
     )
-
 
     //Peer js
     const createPeer = (userToSignal, callerID, stream) => {
@@ -333,8 +353,46 @@ const Channel = ({channelData, showNav = true}) => {
             setShowMessages(!showMessages)
         }
     }
+
     const makeVideoCall = () => {
 
+    }
+
+    const trackScrolling = () => {
+        const wrappedElement = document.querySelector(".channel-message-container > div:first-of-type");
+        const chanCont = document.querySelector(".channel-message-container");
+
+        //Todo: Corriger
+        if (isTop(wrappedElement, chanCont) && !messagesLoading) {
+            chanCont.removeEventListener('scroll', trackScrolling);
+            getOlderMessages()
+            chanCont.scrollBy(0, 10)
+        }
+    }
+
+    const isTop = (el) => {
+        let nav = document.querySelector(".Navigation")?.getBoundingClientRect()?.height;
+        let title = document.querySelector('.title-container.container')?.getBoundingClientRect()?.height
+        return ((nav ?? 0) + title) === el?.getBoundingClientRect().top;
+    }
+
+    const getOlderMessages = () => {
+        setMessagesLoading(true)
+        axios.get(param.channel.getMessages + "?channel=" + channelData._id + "&reqiteration=" + (msgCount.current <= 0 ? 0 : msgCount.current) + "&addmsg=" + additionalMsg.current, {headers: authHeader()})
+            .then((resp) => {
+                msgCount.current = msgCount.current + 1
+
+                resp.data.forEach((msg, index) => {
+                    displayMessage(globalLastMessage, msg, null, true, resp.data.length === index + 1);
+                    document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
+                    globalLastMessage = {username: msg.user.username, isJoinMessage: false, date: msg.date};
+                });
+                setMessagesLoading(false)
+            })
+            .catch((e) => {
+                setIsError(true)
+                setAlertMsg(e.response?.data?.message ?? param.messages.errDefault)
+            });
     }
 
     const handleCallResponse = (button) => {
@@ -351,7 +409,7 @@ const Channel = ({channelData, showNav = true}) => {
             case "mute":
                 setMute(!mute)
                 streamRef.current.getTracks().forEach((track) => {
-                    console.log("Mute")
+
                     track.enabled = mute
                 })
                 break;
@@ -382,13 +440,13 @@ const Channel = ({channelData, showNav = true}) => {
 
     const openCommandList = () => {
         if (!isCommandListOpen && isWritingCommand) {
-            console.log(isWritingCommand)
+
             setIsCommandListOpen(true)
         }
     };
 
-    const writeMessage = (e) => {
-        let msg = e.target.value;
+    const writeMessage = (e, msgHistory) => {
+        let msg = msgHistory ?? e.target.value;
         //Gestion des commandes
         if (msg.trim()[0] === "/") {
             setIsWritingCommand(true);
@@ -419,6 +477,8 @@ const Channel = ({channelData, showNav = true}) => {
     };
 
     const handleKeyPress = (e) => {
+        if (e.key === "ArrowUp") changeMsg("up")
+        if (e.key === "ArrowDown") changeMsg("down")
         if (e.key === "Enter") sendMessage(e);
         if (e.key === "Tab" && autocomplete.length > 0) {
             e.preventDefault();
@@ -426,9 +486,35 @@ const Channel = ({channelData, showNav = true}) => {
         }
     };
 
+    const changeMsg = (direction) => {
+        if (msgHistory.length > 1) {
+            switch (direction) {
+                case "up":
+                    if (historyCount.current < (msgHistory.length - 1)) {
+                        historyCount.current = historyCount.current + 1
+                    }
+                    break;
+                case "down":
+                    if (historyCount.current > 0) {
+                        historyCount.current = historyCount.current - 1
+                    }
+                    break;
+            }
+            if (!msgHistory[msgHistory.length - historyCount.current]) {
+                setMessage("")
+            } else {
+                writeMessage(null, msgHistory[msgHistory.length - historyCount.current])
+            }
+        }
+    }
+
     const sendMessage = (e) => {
         e.preventDefault();
         if (message.length > 0) {
+            setMsgHistory((oldValue) => {
+                return [...oldValue, message]
+            })
+            historyCount.current = 0
             if (isWritingCommand) {
                 let parameters = message.replace('/', '').split(' ');
                 const value = message.replace('/' + parameters[0] + ' ' + parameters[1] + ' ', '')
@@ -443,7 +529,10 @@ const Channel = ({channelData, showNav = true}) => {
                     {headers: authHeader()})
                     .then((response) => {
                         handleCommandResponse(response.data)
-                    }).catch(err => console.log(err));
+                    }).catch((err) => {
+                        setToastMsg(err?.response?.data?.message ?? param.messages.errDefault)
+                    }
+                );
                 setMessage("");
                 setAutocomplete("");
                 setIsWritingCommand(false);
@@ -453,13 +542,21 @@ const Channel = ({channelData, showNav = true}) => {
             }
         }
     };
+    const onCloseToast = () => {
+        setToastMsg("")
+    }
 
     const handleCommandResponse = (response) => {
         //  TODO: Modifier pour rendre l'affichage du nickname dynamique
         const data = response.data ?? response;
-        console.log('data', response)
         if (data) {
             switch (data.action) {
+                case "nick":
+                    displayMessage({date: Date.now()}, {
+                        message: response.message,
+                        user: param.bot,
+                    }, param.bot.picture);
+                    break
                 case "join":
                     history.push("/channels/" + data.channel);
                     break;
@@ -510,6 +607,15 @@ const Channel = ({channelData, showNav = true}) => {
                     }, param.bot.picture)
                     scrollToBottom()
                     break;
+                case "gotaga":
+                    displayMessage({
+                        date: Date.now()
+                    }, {
+                        message: botEasterEgg(data.video),
+                        user: param.bot,
+                    }, param.bot.picture)
+                    scrollToBottom()
+                    break;
             }
         }
     };
@@ -521,20 +627,25 @@ const Channel = ({channelData, showNav = true}) => {
                 setChannelDelete("");
                 if (channelDelete.channel === channelData.slug) history.push("/home")
             })
-            .catch(err => console.log(err))
+            .catch((err) => {
+                    console.log(err)
+                    setAlertMsg(err.response?.data?.message ?? param.messages.errDefault)
+                }
+            )
+
     };
 
-    const displayMessage = (lastMessage, msg, picture) => {
+    const displayMessage = (lastMessage, msg, picture, tobegining, isLastOldMsg) => {
         const lastMsgDate = dayjs(lastMessage.date);
         const msgDate = dayjs(msg.date);
         if (lastMessage && lastMsgDate && lastMessage.username === msg.user.username &&
-            !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3) {
+            !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3 && !isLastOldMsg) {
             setMessageFeed((oldValue) => {
-                return [...oldValue, sameUsernameMessageTemplate(msg.message)]
+                return tobegining ? [sameUsernameMessageTemplate(msg.message), ...oldValue] : [...oldValue, sameUsernameMessageTemplate(msg.message)]
             });
         } else {
             setMessageFeed((oldValue) => {
-                return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
+                return tobegining ? [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue] : [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
             });
         }
     };
@@ -550,15 +661,35 @@ const Channel = ({channelData, showNav = true}) => {
                     state: {slug: response.data.slug}
                 })
             }).catch((err) => {
-            console.log(err)
-            setFormAlertMsg(err.response.data.message)
+
+            setFormAlertMsg(err?.response?.data?.message ?? param.messages.errDefault)
         })
     };
+
+    const handleLeave = () => {
+        setQuitAlertMsg(param.messages.channel.quit)
+    };
+
+    const quitChannel = () => {
+        axios.post(param.channel.leave, {
+                channel: channelData._id
+            }, {headers: authHeader()}
+        ).then((resp) => {
+            setQuitAlertMsg("")
+            history.push("/home")
+        }).catch((err) => {
+            setQuitAlertMsg("")
+            setIsError(true)
+            setAlertMsg(err.response?.data?.message ?? param.messages.errDefault)
+        })
+    }
 
     const sameUsernameMessageTemplate = (message) => {
         return (
             <div className={"same-message"} key={Date.now()}>
-                {message}
+                <pre>
+                   {message}
+                </pre>
             </div>
         )
     };
@@ -581,7 +712,11 @@ const Channel = ({channelData, showNav = true}) => {
                         <span>{user.username}</span>
                         <span className="date">{dayjs(date, {locale: "fr"}).fromNow()}</span>
                     </div>
-                    <div className="text">{message}</div>
+                    <div className="text">
+                        <pre>
+                            {message}
+                        </pre>
+                    </div>
                 </div>
             </div>
         )
@@ -630,13 +765,18 @@ const Channel = ({channelData, showNav = true}) => {
     const getChannelName = () => {
         let name = channelData.name
         if (name.match(/%.+%/g) && channelData.users[0]) {
-            name = channelData.users[0]._id === userState?.user?._id ? channelData.users[0]._id.username : channelData.users[1]._id.username
+            name = channelData.users[0]._id._id === userState?.user?._id ? channelData.users[1]._id.username : channelData.users[0]._id.username
         }
         return name
     }
 
     return (
         <div className="channel-content-container">
+            {toastMsg.length > 0 &&
+            <Toast displayTime={7000} text={toastMsg} onClose={() => {
+                onCloseToast()
+            }}/>
+            }
             {alertMsg.length > 0 &&
             <Alert isError={isError} message={alertMsg} onClose={() => {
                 handleClose();
@@ -646,9 +786,14 @@ const Channel = ({channelData, showNav = true}) => {
             <Loading/>
             }
             {enteringCall &&
-            <CallAlert isCaller={isCaller} alertTitle={alertTitle} onClick={(button) => {
-                handleCallResponse(button)
-            }} channel={{name: channelData.name, picture: channelData.picture}}/>
+            <CallAlert
+                isCaller={isCaller}
+                alertTitle={alertTitle}
+                onClick={(button) => {
+                    handleCallResponse(button)
+                }}
+                channel={{name: channelData.name, picture: channelData.picture, users: channelData.users}}
+            />
             }
             {isInCall &&
             <CallOverlay hide={showMessages} muted={mute} onClick={(button) => {
@@ -674,16 +819,21 @@ const Channel = ({channelData, showNav = true}) => {
                                 fill="#8360C7"/>
 
                         </svg>
-                        <svg onClick={() => {
-                            makeVideoCall()
-                        }} width="31" height="23" viewBox="0 0 31 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M3.334 0H16.666C18.506 0 20 1.492 20 3.334V16.666C20 18.506 18.508 20 16.666 20H3.334C1.494 20 0 18.508 0 16.666V3.334C0 1.494 1.492 0 3.334 0Z"
-                                fill="#29262B"/>
-                            <path
-                                d="M12.8078 11.394L25.5338 18.778C26.6138 19.404 27.9998 18.646 27.9998 17.384V2.61601C27.9998 1.35601 26.6138 0.596009 25.5338 1.22401L12.8078 8.60801C12.5621 8.74826 12.3579 8.95098 12.2159 9.19563C12.0738 9.44027 11.999 9.71812 11.999 10.001C11.999 10.2839 12.0738 10.5618 12.2159 10.8064C12.3579 11.051 12.5621 11.2538 12.8078 11.394V11.394Z"
-                                fill="#29262B"/>
-                        </svg>
+                        <div className="font-awsm-clicker" onClick={() => {
+                            handleLeave()
+                        }}>
+                            <FontAwesomeIcon className="leave-chan" icon={faSignOutAlt}/>
+                        </div>
+                        {/*<svg onClick={() => {*/}
+                        {/*    makeVideoCall()*/}
+                        {/*}} width="31" height="23" viewBox="0 0 31 23" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
+                        {/*    <path*/}
+                        {/*        d="M3.334 0H16.666C18.506 0 20 1.492 20 3.334V16.666C20 18.506 18.508 20 16.666 20H3.334C1.494 20 0 18.508 0 16.666V3.334C0 1.494 1.492 0 3.334 0Z"*/}
+                        {/*        fill="#29262B"/>*/}
+                        {/*    <path*/}
+                        {/*        d="M12.8078 11.394L25.5338 18.778C26.6138 19.404 27.9998 18.646 27.9998 17.384V2.61601C27.9998 1.35601 26.6138 0.596009 25.5338 1.22401L12.8078 8.60801C12.5621 8.74826 12.3579 8.95098 12.2159 9.19563C12.0738 9.44027 11.999 9.71812 11.999 10.001C11.999 10.2839 12.0738 10.5618 12.2159 10.8064C12.3579 11.051 12.5621 11.2538 12.8078 11.394V11.394Z"*/}
+                        {/*        fill="#29262B"/>*/}
+                        {/*</svg>*/}
                     </div>
 
                 </div>
@@ -693,6 +843,11 @@ const Channel = ({channelData, showNav = true}) => {
                 <div onClick={() => closeCommandList()} className="channel-message-container">
                     <div className="container">
                         <div className="messages-container">
+                            {messagesLoading &&
+                            <div className="loading-container-msg">
+                                <Loading/>
+                            </div>
+                            }
                             {messageFeed}
                             <div ref={(el) => {
                                 setRefMessage(el)
@@ -701,6 +856,15 @@ const Channel = ({channelData, showNav = true}) => {
                         </div>
                     </div>
                 </div>
+                {quitAlertMsg.length > 0 &&
+                <DeleteAlert
+                    onDelete={() => quitChannel()}
+                    onClose={() => setQuitAlertMsg("")}
+                    title={"Attention"}
+                    message={quitAlertMsg}
+                    btnMsg={"Quitter"}
+                />
+                }
                 {deleteAlertMsg.length > 0 &&
                 <DeleteAlert
                     onDelete={() => deleteChannel()}
@@ -734,25 +898,19 @@ const Channel = ({channelData, showNav = true}) => {
 
                         <textarea className={`${isWritingCommand ? "orange" : ""}`} tabIndex="0"
                                   onFocus={() => openCommandList()}
+                                  onBlur={() => {
+                                      historyCount.current = 0
+                                  }}
                                   onKeyDown={(e) => handleKeyPress(e)} onChange={(e) => writeMessage(e)}
                                   value={message} placeholder="Message..."/>
                                 <textarea className="read-only" readOnly value={autocomplete}/>
                             </div>
                             <div className="icons-container">
-                                <svg className="mic" width="15" height="23" viewBox="0 0 15 23" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path fillRule="evenodd" clipRule="evenodd"
-                                          d="M0.71875 9.34375C0.909374 9.34375 1.09219 9.41948 1.22698 9.55427C1.36177 9.68906 1.4375 9.87188 1.4375 10.0625V11.5C1.4375 13.025 2.0433 14.4875 3.12164 15.5659C4.19997 16.6442 5.66251 17.25 7.1875 17.25C8.71249 17.25 10.175 16.6442 11.2534 15.5659C12.3317 14.4875 12.9375 13.025 12.9375 11.5V10.0625C12.9375 9.87188 13.0132 9.68906 13.148 9.55427C13.2828 9.41948 13.4656 9.34375 13.6562 9.34375C13.8469 9.34375 14.0297 9.41948 14.1645 9.55427C14.2993 9.68906 14.375 9.87188 14.375 10.0625V11.5C14.375 13.2818 13.7132 15.0001 12.5179 16.3216C11.3226 17.643 9.67914 18.4734 7.90625 18.6516V21.5625H12.2188C12.4094 21.5625 12.5922 21.6382 12.727 21.773C12.8618 21.9078 12.9375 22.0906 12.9375 22.2812C12.9375 22.4719 12.8618 22.6547 12.727 22.7895C12.5922 22.9243 12.4094 23 12.2188 23H2.15625C1.96563 23 1.78281 22.9243 1.64802 22.7895C1.51323 22.6547 1.4375 22.4719 1.4375 22.2812C1.4375 22.0906 1.51323 21.9078 1.64802 21.773C1.78281 21.6382 1.96563 21.5625 2.15625 21.5625H6.46875V18.6516C4.69586 18.4734 3.05235 17.643 1.85708 16.3216C0.661802 15.0001 -2.23843e-05 13.2818 5.67821e-10 11.5V10.0625C5.67821e-10 9.87188 0.0757254 9.68906 0.210517 9.55427C0.345309 9.41948 0.528126 9.34375 0.71875 9.34375Z"
-                                          fill="white"/>
-                                    <path fillRule="evenodd" clipRule="evenodd"
-                                          d="M10.0625 11.5V4.3125C10.0625 3.55 9.7596 2.81874 9.22043 2.27957C8.68126 1.7404 7.95 1.4375 7.1875 1.4375C6.425 1.4375 5.69373 1.7404 5.15457 2.27957C4.6154 2.81874 4.3125 3.55 4.3125 4.3125V11.5C4.3125 12.2625 4.6154 12.9938 5.15457 13.5329C5.69373 14.0721 6.425 14.375 7.1875 14.375C7.95 14.375 8.68126 14.0721 9.22043 13.5329C9.7596 12.9938 10.0625 12.2625 10.0625 11.5ZM7.1875 0C6.04375 0 4.94685 0.454351 4.1381 1.2631C3.32935 2.07185 2.875 3.16875 2.875 4.3125V11.5C2.875 12.6437 3.32935 13.7406 4.1381 14.5494C4.94685 15.3581 6.04375 15.8125 7.1875 15.8125C8.33125 15.8125 9.42815 15.3581 10.2369 14.5494C11.0456 13.7406 11.5 12.6437 11.5 11.5V4.3125C11.5 3.16875 11.0456 2.07185 10.2369 1.2631C9.42815 0.454351 8.33125 0 7.1875 0V0Z"
-                                          fill="white"/>
-                                </svg>
                                 {showEmojiPicker &&
                                 <Picker
                                     perLine={7}
                                     onSelect={(emoji) => {
-                                        console.log(emoji)
+
                                         setMessage(message + emoji.native)
                                     }}
                                     style={{position: 'absolute', bottom: '35px', right: '5px'}}

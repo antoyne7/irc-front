@@ -1,7 +1,5 @@
 import React from "react"
 import "./pictures.styles.scss"
-import param from "../../services/param";
-import axios from "axios";
 
 const Picture = (props) => {
     const color = getComputedStyle(document.documentElement).getPropertyValue('--primary').split('#')[1];
@@ -15,7 +13,7 @@ const Picture = (props) => {
             }
             {!props.src && props.name &&
             <img
-                src={"https://eu.ui-avatars.com/api/?length=1&rounded=true&bold=true&font-size=0.55&background=e8e2e2&name=" + props.name.toLowerCase() +
+                src={"https://eu.ui-avatars.com/api/?length=1&rounded=true&bold=true&font-size=0.55&background=e8e2e2&name=" + props.name.toLowerCase().replace("~", "") +
                 "&size=" + props.size + "&color=" + color}
                 alt="Photo"/>
             }

@@ -1,18 +1,18 @@
-const HOST = "https://irc-back.herokuapp.com";
 // const HOSTNAME = "localhost";
 // const PROTOCOL = "http://"
 // const PORT = ":8080"
 
-/*const PROTOCOL = "https://"
+const PROTOCOL = "https://"
 const HOSTNAME = "192.168.1.146";
 const PORT = ":8443"
-const PEERPORT = "9000"*/
-// const HOST = PROTOCOL + HOSTNAME + PORT
+const HOST = PROTOCOL + HOSTNAME + PORT
 const APIHOST = HOST + "/api";
 
 const param = {
+    PROTOCOL,
+    HOSTNAME,
+    PORT,
     HOST,
-    peer_endpoint: "/peerjs",
     img: HOST + "/users-pictures/",
     botPicture: HOST + "/bot-picture/",
     channelImg: HOST + "/channels-pictures/",
@@ -36,9 +36,12 @@ const param = {
         },
         profile: {
             deleteTitle: "Attention",
-            deleteMsg: "Voulez-vous vraiment supprimer votre compte ? Toutes vos informations seront éffacées."
+            deleteMsg: "Voulez-vous vraiment supprimer votre compte ? Toutes vos informations seront éffacées.",
+            guestDeleteMsg: "Voulez-vous vraiment vous déconnecter ? Vos informations et salons ne seront pas sauvegardés."
         },
         channel: {
+            titleQuit: "Attention",
+            quit: "Voulez-vous vraiment quitter ce salon ?",
             duplicateName: "Ce nom de salon est déjà pris !",
             deleteTitle: "Attention",
             deleteMsg: "Voulez-vous vraiment supprimer le salon ? Tous les messages seront éffacées."
@@ -55,6 +58,7 @@ const param = {
         add: APIHOST + "/channel/add",
         delete: APIHOST + "/channel/delete?channel=",
         connect: APIHOST + "/channel/connect",
+        leave: APIHOST + "/channel/leave",
         get: APIHOST + "/channel/get?channel=",
         search: APIHOST + "/channel/search?search=",
         getMessages: APIHOST + "/channel/messages/get",
@@ -122,6 +126,13 @@ const param = {
             command: "diablox9",
             parameter: "",
             short_desc: "Un truc de gamer",
+            hidden: true
+        },
+        {
+            id: 9,
+            command: "gotaga",
+            parameter: "",
+            short_desc: "Toujours un truc de gamer",
             hidden: true
         },
 

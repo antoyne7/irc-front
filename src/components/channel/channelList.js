@@ -29,7 +29,7 @@ const ChannelList = ({channels = []}) => {
     }, [channels])
 
     const getUserInfo = (channelUsers) => {
-        const user = channelUsers[0]._id === userState.user._id ? channelUsers[0]._id : channelUsers[1]._id
+        const user = channelUsers[0]._id._id === userState.user._id ? channelUsers[1]._id : channelUsers[0]._id
         return {
             username: user.username,
             picture: user.picture

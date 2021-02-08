@@ -10,10 +10,37 @@
   }
 
   .sidebar-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .channel-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar {
+        background-color: transparent;
+        width: 5px;
+        height: 8px;
+      }
+
+      &:hover {
+        &::-webkit-scrollbar {
+          width: 5px;
+          height: 8px;
+          background-color: var(--background);
+        }
+      }
+    }
+
     padding: 25px;
-    >a {
+
+    > a {
       text-decoration: none;
     }
+
     @media (max-width: 1440px) {
       padding: 25px 10px;
     }

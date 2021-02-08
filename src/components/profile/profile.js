@@ -40,6 +40,7 @@ const Profile = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [alertMsg, setAlertMsg] = useState("");
     const [picturePreview, setPicturePreview] = useState("");
+    const [picture, setPicture] = useState(null);
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -75,14 +76,7 @@ const Profile = () => {
 
     const onChangePicture = (e) => {
         setPicturePreview(URL.createObjectURL(e.target.files[0]));
-        const formData = new FormData();
-        formData.append('picture', e.target.files[0]);
-        axios.post(param.user.picture,
-            formData,
-            {headers: authHeader()},
-        ).then(response => {
-            console.log("response:", response)
-        }).catch(err => console.log("error:", err))
+        setPicture(e.target.files[0])
     };
 
     const handleDelete = () => {
@@ -92,8 +86,9 @@ const Profile = () => {
 
     const confirmDelete = () => {
         axios.post(param.auth.deleteAccount, {}, {headers: authHeader()})
-            .then((response) => {
-                handleDisconnect();
+            .then(() => {
+                localStorage.removeItem("user")
+                history.push('/')
             }).catch((err) => {
             setIsLoading(false);
             setIsError(true);
@@ -103,14 +98,15 @@ const Profile = () => {
 
     const handleSubmit = () => {
         setIsLoading(true)
+        const formData = new FormData();
+        formData.append('picture', picture);
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('passwordRepeat', passwordRepeat);
+        formData.append('oldPassword', oldPassword);
         axios.post(param.user.profile,
-            {
-                username,
-                email,
-                password,
-                passwordRepeat,
-                oldPassword
-            },
+            formData,
             {headers: authHeader()},
         ).then(() => {
             setIsLoading(false)
@@ -133,8 +129,13 @@ const Profile = () => {
     }
 
     const handleDisconnect = () => {
-        localStorage.removeItem("user")
-        history.push('/')
+        if (userState.user?.roles?.includes('5ffdc51c44c1710c04faac02')) {
+            setDeleteAlertMsg(param.messages.profile.guestDeleteMsg);
+            setDeleteAlertTitle(param.messages.profile.deleteTitle);
+        } else {
+            localStorage.removeItem("user")
+            history.push('/')
+        }
     }
 
     return (
@@ -180,7 +181,7 @@ const Profile = () => {
                             }
                         </div>
                         {toastMsg.length > 0 &&
-                        <Toast displayTime={3000} onClose={() => {
+                        <Toast displayTime={7000} onClose={() => {
                             setToastMsg("")
                         }} text={toastMsg}/>
                         }

@@ -33,7 +33,6 @@ const ChannelParam = () => {
             {headers: authHeader()}
         )
             .then((res) => {
-                // console.log(res.data.channel)
                 if (res.data.channel.isPrivate) history.goBack()
                 setChannel(res.data.channel);
                 setName(res.data.channel.name)

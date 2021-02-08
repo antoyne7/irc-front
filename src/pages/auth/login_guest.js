@@ -80,7 +80,7 @@ const LoginGuest = () => {
                 }}/>
                 }
                 <div className="auth">
-                    <h1>Herobrine</h1>
+                    <h1>IRC AL</h1>
                     <form onSubmit={(evt) => createAccount(evt)} className="form">
                         <h2>Rejoindre en tant qu'invité</h2>
                         <Input

@@ -645,14 +645,12 @@ const Channel = ({channelData, showNav = true}) => {
         const msgDate = dayjs(msg.date);
         if (lastMessage && lastMsgDate && lastMessage.username === msg.user.username &&
             !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3 && !isLastOldMsg) {
-                console.log("Je met a jour msgFeed", messageFeed)
             setMessageFeed((oldValue) => {
-                return tobegining ? [sameUsernameMessageTemplate(msg.message), ...oldValue] : [...oldValue, sameUsernameMessageTemplate(msg.message)]
+                return [...oldValue, sameUsernameMessageTemplate(msg.message)]
             });
         } else {
             setMessageFeed((oldValue) => {
-                console.log("Je met a jour msgFeed", messageFeed)
-                return tobegining ? [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue] : [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
+                return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
             });
         }
     };

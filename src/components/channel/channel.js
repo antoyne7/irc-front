@@ -376,9 +376,7 @@ const Channel = ({channelData, showNav = true}) => {
     }
 
     const isTop = (el) => {
-        let nav = document.querySelector(".Navigation")?.getBoundingClientRect()?.height;
-        let title = document.querySelector('.title-container.container')?.getBoundingClientRect()?.height
-        return ((nav ?? 0) + title) === el?.getBoundingClientRect().top;
+        return el?.offsetTop === el?.getBoundingClientRect().top;
     }
 
     const getOlderMessages = () => {

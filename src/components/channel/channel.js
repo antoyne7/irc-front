@@ -386,7 +386,10 @@ const Channel = ({channelData, showNav = true}) => {
             .then((resp) => {
                 console.log('response older message :', resp)
                 msgCount.current = msgCount.current + 1
-                document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
+
+                if (resp.data.length > 0) {
+                    document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
+                }
 
                 resp.data.forEach((msg, index) => {
                     displayMessage(globalLastMessage, msg, null, true, resp.data.length === index + 1);

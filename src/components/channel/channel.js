@@ -119,6 +119,10 @@ const Channel = ({channelData, showNav = true}) => {
                 setIsChannelAdmin(true)
             }
         }
+
+        return () => {
+            document.querySelector(".channel-message-container").removeEventListener('scroll', trackScrolling);
+        }
     }, [userState, channelData]);
 
     useEffect(() => {
@@ -305,9 +309,7 @@ const Channel = ({channelData, showNav = true}) => {
                     });
                 }
             }
-        },
-        [isFetchingData, channelData]
-    )
+        },[isFetchingData, channelData])
 
     //Peer js
     const createPeer = (userToSignal, callerID, stream) => {
@@ -380,11 +382,12 @@ const Channel = ({channelData, showNav = true}) => {
         setMessagesLoading(true)
         axios.get(param.channel.getMessages + "?channel=" + channelData._id + "&reqiteration=" + (msgCount.current <= 0 ? 0 : msgCount.current) + "&addmsg=" + additionalMsg.current, {headers: authHeader()})
             .then((resp) => {
+                console.log('response older message :', resp)
                 msgCount.current = msgCount.current + 1
+                document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
 
                 resp.data.forEach((msg, index) => {
                     displayMessage(globalLastMessage, msg, null, true, resp.data.length === index + 1);
-                    document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
                     globalLastMessage = {username: msg.user.username, isJoinMessage: false, date: msg.date};
                 });
                 setMessagesLoading(false)

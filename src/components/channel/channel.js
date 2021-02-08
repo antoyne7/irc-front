@@ -645,11 +645,13 @@ const Channel = ({channelData, showNav = true}) => {
         const msgDate = dayjs(msg.date);
         if (lastMessage && lastMsgDate && lastMessage.username === msg.user.username &&
             !lastMessage.isJoinMessage && msgDate.diff(lastMsgDate, 'minute') < 3 && !isLastOldMsg) {
+                console.log("Je met a jour msgFeed")
             setMessageFeed((oldValue) => {
                 return tobegining ? [sameUsernameMessageTemplate(msg.message), ...oldValue] : [...oldValue, sameUsernameMessageTemplate(msg.message)]
             });
         } else {
             setMessageFeed((oldValue) => {
+                console.log("Je met a jour msgFeed")
                 return tobegining ? [messageTemplate(msg.message, msg.user, msg.date, picture ?? null), ...oldValue] : [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null)]
             });
         }
@@ -749,7 +751,6 @@ const Channel = ({channelData, showNav = true}) => {
                 {message}
                 <ul className="user-list">
                     {list.map((element) => {
-                        console.log("La je map !")
                         return (
                             <li key={element._id ?? Date.now()}>{element.username ?? element.name}</li>
                         )
@@ -854,6 +855,7 @@ const Channel = ({channelData, showNav = true}) => {
                                 <Loading/>
                             </div>
                             }
+                            {console.log("j'affiche le message feed")}
                             {messageFeed}
                             <div ref={(el) => {
                                 setRefMessage(el)

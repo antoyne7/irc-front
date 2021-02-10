@@ -39,8 +39,6 @@ dayjs.extend(relativeTime);
 
 const Channel = ({channelData, showNav = true}) => {
 
-    console.log('root comp')
-
     let globalLastMessage;
 
     const history = useHistory();
@@ -92,6 +90,7 @@ const Channel = ({channelData, showNav = true}) => {
     const [commandList, setCommandList] = useState([]);
 
     useEffect(() => {
+
         if (!userState.isLoading && !userState.isError) {
 
             document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
@@ -120,10 +119,10 @@ const Channel = ({channelData, showNav = true}) => {
             if (userState.user._id === channelData.creator) {
                 setIsChannelAdmin(true)
             }
-        }
 
-        return () => {
-            document.querySelector(".channel-message-container").removeEventListener('scroll', trackScrolling);
+            return () => {
+                document.querySelector(".channel-message-container")?.removeEventListener('scroll', trackScrolling);
+            }
         }
     }, [userState, channelData]);
 
@@ -311,7 +310,9 @@ const Channel = ({channelData, showNav = true}) => {
                     });
                 }
             }
-        },[isFetchingData, channelData])
+        },
+        [isFetchingData, channelData]
+    )
 
     //Peer js
     const createPeer = (userToSignal, callerID, stream) => {
@@ -366,7 +367,6 @@ const Channel = ({channelData, showNav = true}) => {
         const wrappedElement = document.querySelector(".channel-message-container > div:first-of-type");
         const chanCont = document.querySelector(".channel-message-container");
 
-        //Todo: Corriger
         if (isTop(wrappedElement, chanCont) && !messagesLoading) {
             chanCont.removeEventListener('scroll', trackScrolling);
             getOlderMessages()
@@ -375,20 +375,16 @@ const Channel = ({channelData, showNav = true}) => {
     }
 
     const isTop = (el) => {
-        return el?.offsetTop === el?.getBoundingClientRect().top;
+        return el.offsetTop === el?.getBoundingClientRect().top;
     }
 
     const getOlderMessages = () => {
         setMessagesLoading(true)
-        axios.get(param.channel.getMessages + "?channel=" + channelData._id + "&reqiteration=" + (msgCount.current <= 0 ? 0 : msgCount.current) + "&addmsg=" + additionalMsg.current, {headers: authHeader()})
+        axios.get(param.channel.getMessages + "?channel=" + channelData._id + "&reqiteration=" + (msgCount.current <= 0 ? 0 : msgCount.current) + "&addmsg=" + additionalMsg.current,
+            {headers: authHeader()})
             .then((resp) => {
-                console.log('response older message :', resp)
                 msgCount.current = msgCount.current + 1
-
-                if (resp.data.length > 0) {
-                    document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
-                }
-
+                document.querySelector(".channel-message-container").addEventListener('scroll', trackScrolling);
                 resp.data.forEach((msg, index) => {
                     displayMessage(globalLastMessage, msg, null, true, resp.data.length === index + 1);
                     globalLastMessage = {username: msg.user.username, isJoinMessage: false, date: msg.date};
@@ -434,7 +430,6 @@ const Channel = ({channelData, showNav = true}) => {
     const playAudio = () => {
         document.getElementById("notification").play()
     }
-
 
     const scrollToBottom = () => {
         if (refMessage) refMessage.scrollIntoView()
@@ -656,7 +651,6 @@ const Channel = ({channelData, showNav = true}) => {
                     return [...oldValue, sameUsernameMessageTemplate(msg.message, msg?._id)]
                 });
             }
-            
         } else {
             if (tobegining) {
                 setMessageFeed((oldValue) => {
@@ -666,7 +660,7 @@ const Channel = ({channelData, showNav = true}) => {
                 setMessageFeed((oldValue) => {
                     return [...oldValue, messageTemplate(msg.message, msg.user, msg.date, picture ?? null, msg?._id)]
                 });
-            }            
+            }
         }
     };
 
@@ -868,7 +862,6 @@ const Channel = ({channelData, showNav = true}) => {
                                 <Loading/>
                             </div>
                             }
-                            {console.log("j'affiche le message feed")}
                             {messageFeed}
                             <div ref={(el) => {
                                 setRefMessage(el)

@@ -5,6 +5,7 @@ import "./home.style.scss"
 import { useHistory } from "react-router-dom";
 
 import useUser from '../../services/use-user'
+import Loading from "../loading/loading";
 
 const Home = ({ children, menuSelected = 0 }) => {
     const history = useHistory()
@@ -39,21 +40,33 @@ const Home = ({ children, menuSelected = 0 }) => {
     }, [userState, history])
 
     return (
-        (!userState.isLoading &&
-            <div className="home">
-                <div className="home-container">
-                    {!isMobile &&
-                        <Sidebar channels={userState.user?.channels} />
-                    }
-                    <div className="home-content">
-                        <div className="content">
-                            {children}
+        <>
+            {userState.isLoading &&
+                <div className="home">
+                    <div className="home-container">
+                        <div className="home-content">
+                            <Loading />
                         </div>
+                        <Menu selected={menuSelected} />
                     </div>
-                    <Menu selected={menuSelected} />
-                </div>
-            </div>)
-    )
+                </div>}
+
+            {!userState.isLoading &&
+                <div className="home">
+                    <div className="home-container">
+                        {!isMobile &&
+                            <Sidebar channels={userState.user?.channels} />
+                        }
+                        <div className="home-content">
+                            <div className="content">
+                                {children}
+                            </div>
+                        </div>
+                        <Menu selected={menuSelected} />
+                    </div>
+                </div>}
+        </>
+    );
 };
 
 export default Home

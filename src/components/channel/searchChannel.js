@@ -69,6 +69,7 @@ const SearchChannel = () => {
             {slug},
             {headers: authHeader()}
         ).then((response) => {
+            console.log(response)
             if (response.data.password) {
                 setPasswordTitle(response.data.message);
                 setSlug(response.data.slug);
